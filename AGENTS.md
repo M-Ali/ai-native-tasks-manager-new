@@ -187,7 +187,10 @@ Secrets (API keys, service-account credentials, database passwords) live in envi
 
 ### Language and Layer Boundaries
 
-Agents and MCP server are Python. UI is TypeScript (Next.js 16). These layers communicate over MCP and HTTP — never share in-process state or import across boundaries.
+Agents and MCP server are Python 3.13+. UI is TypeScript (Next.js 16). These layers communicate over MCP and HTTP — never share in-process state or import across boundaries.
+
+- **Python version:** 3.13+ is the minimum. Do not use features or syntax incompatible with 3.13.
+- **Package manager:** `uv` is the only approved package manager for all Python components. Do not use `pip`, `poetry`, or `conda`. Use `uv add` to add dependencies and `uv run` to execute scripts. Always commit `uv.lock`.
 
 ### Adding a New Agent
 
