@@ -101,6 +101,66 @@ User: *"Book a 30-min call with Sara on Friday at 3 pm."*
 
 These are non-negotiable on this project.
 
+### Always Verify What You Are Doing
+
+Before taking any action — writing code, calling a tool, making a change — confirm that you understand exactly what you are about to do and why. Do not proceed on assumptions.
+
+- Re-read the task or instruction before starting implementation.
+- After completing a step, verify the output matches the expected result before moving on.
+- If something looks wrong or unexpected, stop and investigate rather than continuing.
+- Never assume a previous step succeeded — check its output explicitly.
+- When in doubt, ask a clarifying question rather than guessing.
+
+### Verification Infrastructure
+
+Quality requires feedback loops, not assumptions. Give agents and developers the tools to verify their own work — this can 2-3x output quality.
+
+- Every agent action that mutates state must produce a verifiable confirmation (e.g. read back the record after writing it).
+- Integration tests must cover the full path (UI → Agent → MCP → Notifications), not just unit-level checks.
+- Use the Claude-Reviews-Claude pattern for non-trivial changes: one session writes, a second session reviews with a fresh perspective, the first incorporates feedback.
+- Run verification before accepting any output as done.
+
+### Planning Discipline
+
+Use Plan Mode before executing non-trivial tasks. Iterate on the plan until aligned, then switch to execution. Re-enter planning immediately when execution goes sideways.
+
+- Write down the plan before writing code.
+- If two correction attempts on the same issue fail, stop, clear context, and rewrite the prompt/plan.
+- Give the agent the problem to solve, not the solution to implement — let it investigate freely.
+
+### Self-Evolving Documentation
+
+This AGENTS.md grows with every correction. When a mistake is made, document the rule that prevents it from recurring before moving on.
+
+- Update AGENTS.md immediately when a new constraint or lesson is discovered.
+- Prune rules that are no longer relevant — a long ignored document is worse than a short focused one.
+- The whole team contributes to this file. Every correction is a candidate entry.
+
+### Session and Context Management
+
+Context degrades as it fills. Manage it actively.
+
+- Use `/clear` between unrelated tasks to reset context.
+- Use subagents for investigation tasks to keep the main context clean — subagents explore in isolation and report summaries back.
+- Maintain focused sessions per workstream rather than mixing unrelated concerns in one conversation.
+- Narrow scope or delegate to a subagent before context fills with unscoped exploration.
+
+### Autonomous Problem Solving
+
+- Give the agent the problem, not the solution. Let it investigate without micromanagement.
+- Use subagents to parallelise complex work (append "use subagents" to a prompt to trigger this).
+- Pre-allow safe, repeated operations (builds, tests, formatters) so the agent is not blocked by permission prompts on routine work.
+
+### Failure Pattern Avoidance
+
+| Pattern | Symptom | Fix |
+|---|---|---|
+| Mixed-concern session | Unrelated tasks in one conversation, cluttered context | `/clear` between unrelated work |
+| Correction spiral | Same issue fails to resolve after 2+ attempts | Clear context, rewrite the prompt from scratch |
+| Trust-without-verify | Output looks plausible but edge cases are untested | Always provide and run a verification step |
+| Infinite exploration | Context fills with unscoped investigation | Narrow scope or delegate to a subagent |
+| Stale rules | AGENTS.md rules ignored because the file is too long | Prune irrelevant rules ruthlessly |
+
 ### Test-Driven Development
 
 Write the test before the implementation. Every feature, tool, and agent behaviour starts with a failing test that defines the expected outcome. No code ships without a corresponding test that was written first.
